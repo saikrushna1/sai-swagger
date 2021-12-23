@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div id="content"></div>
+</body>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+    var content = /*[[${content}]]*/ 'default';   
+   document.write(content);
+
+/*]]>*/
+</script>
+
+</html>

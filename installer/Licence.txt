@@ -1,0 +1,61 @@
+SAVIYNT INC.
+SAVIYNT FREE TRIAL SUBSCRIPTION LICENSE AGREEMENT
+THIS SAVIYNT SUBSCRIPTION LICENSE TRIAL AGREMENT (“AGREEMENT”) GOVERNS THE USE OF THE SAVIYNT SERVICE DESCRIBED HEREIN. BY ACCESING AND USING THE SAVIYNT SERVICE, YOU (“CUSTOMER”) ARE CONSENTING TO BE BOUND BY THIS AGREEMENT, INCLUDING ALL TERMS INCORPORATED BY REFERENCE. YOU AGREE THAT THIS AGREEMENT IS EQUIVALENT TO ANY WRITTEN NEGOTIATED AGREEMENT SIGNED BY YOU. IF YOU AGREE TO THESE TERMS ON BEHALF OF A BUSINESS OR A GOVERNMENT AGENCY, YOU REPRESENT AND WARRANT THAT YOU HAVE AUTHORITY TO BIND THE CUSTOMER TO THIS AGREEMENT, AND YOUR AGREEMENT TO THESE TERMS WILL BE TREATED AS THE AGREEMENT OF THE BUSINESS. SAVIYNT SERVICE IS BEING LICENSED AND NOT SOLD TO YOU. SAVIYNT PERMITS YOU TO ACCESS AND USE THE SAVIYNT SERVICE ONLY IN ACCORDANCE WITH THE TERMS OF THIS AGREEMENT.
+
+Modifications to the Service
+
+Saviynt reserves the right to update and change the Terms of Service from time to time without notice. Any new features that augment or enhance the current Service, including the release of new tools and resources, shall be subject to the Terms of Service. Continued use of the Service after any such changes shall constitute your consent to such changes.
+
+Saviynt reserves the right at any time and from time to time to modify or discontinue, temporarily or permanently, the Service (or any part thereof) with or without notice. Saviynt shall not be liable to you or to any third party for any modification, suspension or discontinuance of the Service.
+
+Cancellation and Termination
+
+You are solely responsible for properly canceling your account. All of your Content will be immediately deleted from the Service upon cancellation. This information cannot be recovered once your account is cancelled. Saviynt, in its sole discretion, has the right to suspend or terminate your account and refuse any and all current or future use of the Service for any reason at any time. Such termination of the Service will result in the deactivation or deletion of your Account or your access to your Account, and the forfeiture and relinquishment of all Content in your Account. Saviynt reserves the right to refuse service to anyone for any reason at any time.
+
+Access Rights
+
+Subject to compliance with the provisions of this Agreement, Saviynt grants to Customer a limited, non-sub licensable, non-exclusive, non-transferable right during the Term, to allow its Users to access and use the Service in accordance with the Documentation, solely for Customer’s business purposes and limited to integration with one (1) enterprise application. Customer’s rights to access the Service will be limited to those expressly granted in the next section, and Saviynt reserves all other rights, title, and interest therein.
+
+Restrictions
+
+Customer is responsible for all activities conducted under its and its Users’ logins on the Service. Customer shall use the Service in compliance with applicable law and shall not: (i) copy, rent, sell, lease, distribute, pledge, assign, or otherwise transfer, or encumber rights to the Service, or any part thereof, or use it for the benefit of any third party, or make it available to anyone other than its Users; (ii) send or store infringing or unlawful material; (iii) send or store viruses, worms, time bombs, Trojan horses and other harmful or malicious code, files, scripts, agents or programs; (iv) attempt to gain unauthorized access to, or disrupt the integrity or performance of, the Service or the data contained therein; (v) modify, copy or create derivative works based on the Service, or any portion thereof; (vi) access the Service for the purpose of building a competitive product or service or copying its features or user interface; or (vii) delete, alter, add to or fail to reproduce in and on the Service the name of Saviynt and any copyright or other notices appearing in or on the Service or which may be required by Saviynt at any time.
+
+Fees
+
+Saviynt will make the Service available to Customer, on a trial basis free of charge, during the Term until the earlier of (a) the end of the Term, or (b) the start date of any purchased Service subscriptions ordered by Customer under an Order Form for such Service.
+
+Proprietary Rights
+
+All right, title and interest in and to the Customer Data is owned exclusively by Customer. Except for the rights expressly granted under this Agreement, Saviynt retains all right, title, and interest (including all related intellectual property rights) in and to the Service, all results of Professional Services, and all other products, works, software and technology created, used, or provided by Saviynt in connection with this Agreement. Further, if Customer or its Users provide Saviynt any suggestions, input or other feedback relating to the Services or Professional Services, Saviynt shall have the right to freely and fully exercise and exploit the foregoing in connection with its business.
+
+Security
+
+Saviynt has implemented commercially reasonable technical and organizational measures designed to secure your personal information and User Content from accidental loss and from unauthorized access, use, alteration or disclosure. However, we cannot guarantee that unauthorized third parties will never be able to defeat those measures or use your personal information and User Content for improper purposes. Customer acknowledges that they provide their personal information at their own risk.
+
+Reliability of Service
+
+Saviynt provides connectors that interact with third party applications whose vendors Saviynt may or may not have a commercial or contractual relationship with. Saviynt continuously monitors the working condition of these connectors and is committed to resolving any issues that may arise from a vendor changing interfaces of its application. You understand that Saviynt is not liable or can be held responsible for any changes in third party applications and interoperability can be broken temporarily or permanently. Furthermore, Saviynt has no commitments to ensuring the working condition of any custom connectors built by you.
+
+The Service is controlled and operated from its facilities in the United States. Saviynt makes no representations that the Service is appropriate or available for use in other locations. Those who access or use the Service from other jurisdictions do so at their own volition and are entirely responsible for compliance with local law, including but not limited to export and import regulations. Unless otherwise explicitly stated, all materials found on the Service are solely directed to individuals, companies, or other entities located in the U.S
+
+No Warranty, and Disclaimer
+
+SERVICE IS PROVIDED “AS IS” WITHOUT ANY WARRANTIES. SAVIYNT AND ITS SUPPLIERS HEREBY DISCLAIM ALL (AND HAVE NOT AUTHORIZED ANYONE TO MAKE ANY) WARRANTIES RELATING TO THE SERVICE, PROFESSIONAL SERVICES OR OTHER SUBJECT MATTER OF THIS AGREEMENT, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTIES OF NON-INFRINGEMENT OF THIRD PARTY RIGHTS, TITLE, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE PARTIES ARE NOT RELYING AND HAVE NOT RELIED ON ANY REPRESENTATIONS OR WARRANTIES WHATSOEVER REGARDING THE SUBJECT MATTER OF THIS AGREEMENT, EXPRESS OR IMPLIED. SAVIYNT MAKES NO WARRANTY REGARDING ANY THIRD PARTY SERVICE WITH WHICH THE SERVICE MAY INTEROPERATE.
+
+Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL SAVIYNT, ITS AFFILIATES, DIRECTORS, EMPLOYEES OR ITS LICENSORS BE LIABLE FOR ANY DIRECT, INDIRECT, PUNITIVE, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR EXEMPLARY DAMAGES, INCLUDING WITHOUT LIMITATION DAMAGES FOR LOSS OF PROFITS, GOODWILL, USE, DATA OR OTHER INTANGIBLE LOSSES, THAT RESULT FROM THE USE OF, OR INABILITY TO USE, THIS SERVICE. UNDER NO CIRCUMSTANCES WILL SAVIYNT BE RESPONSIBLE FOR ANY DAMAGE, LOSS OR INJURY RESULTING FROM HACKING, TAMPERING OR OTHER UNAUTHORIZED ACCESS OR USE OF THE SERVICE OR YOUR ACCOUNT OR THE INFORMATION CONTAINED THEREIN.
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, SAVIYNT ASSUMES NO LIABILITY OR RESPONSIBILITY FOR ANY (I) ERRORS, MISTAKES, OR INACCURACIES OF CONTENT; (II) PERSONAL INJURY OR PROPERTY DAMAGE, OF ANY NATURE WHATSOEVER, RESULTING FROM YOUR ACCESS TO AND USE OF OUR SERVICE; (III) ANY UNAUTHORIZED ACCESS TO OR USE OF OUR SECURE SERVERS AND/OR ANY AND ALL PERSONAL INFORMATION STORED THEREIN; (IV) ANY INTERRUPTION OR CESSATION OF TRANSMISSION TO OR FROM THE SERVICE; (V) ANY BUGS, VIRUSES, TROJAN HORSES, OR THE LIKE THAT MAY BE TRANSMITTED TO OR THROUGH OUR SERVICE BY ANY THIRD PARTY; (VI) ANY ERRORS OR OMISSIONS IN ANY CONTENT OR FOR ANY LOSS OR DAMAGE INCURRED AS A RESULT OF THE USE OF ANY CONTENT POSTED, EMAILED, TRANSMITTED, OR OTHERWISE MADE AVAILABLE THROUGH THE SERVICE; AND/OR (VII) USER CONTENT OR THE DEFAMATORY, OFFENSIVE, OR ILLEGAL CONDUCT OF ANY THIRD PARTY. IN NO EVENT SHALL SAVIYNT, ITS AFFILIATES, DIRECTORS, EMPLOYEES, OR LICENSORS BE LIABLE TO YOU FOR ANY CLAIMS, PROCEEDINGS, LIABILITIES, OBLIGATIONS, DAMAGES, LOSSES OR COSTS IN AN AMOUNT EXCEEDING THE AMOUNT YOU PAID TO SAVIYNT HEREUNDER. THIS LIMITATION OF LIABILITY SECTION APPLIES WHETHER THE ALLEGED LIABILITY IS BASED ON CONTRACT, TORT, NEGLIGENCE, STRICT LIABILITY, OR ANY OTHER BASIS, EVEN IF SAVIYNT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. THE FOREGOING LIMITATION OF LIABILITY SHALL APPLY TO THE FULLEST EXTENT PERMITTED BY LAW IN THE APPLICABLE JURISDICTION.NEGLIGENCE, STRICT LIABILITY, OR ANY OTHER BASIS, EVEN IF SAVIYNT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. THE FOREGOING LIMITATION OF LIABILITY SHALL APPLY TO THE FULLEST EXTENT PERMITTED BY LAW IN THE APPLICABLE JURISDICTION.
+
+Assignment
+
+Neither the rights nor the obligations arising under this Agreement are assignable or transferable by Customer or Saviynt without the other party’s prior written consent which shall not be unreasonably withheld or delayed, and any such attempted assignment or transfer shall be void and without effect. Notwithstanding the foregoing, either party may freely assign this Agreement in its entirety (including all Order Forms), upon notice and without the consent of the other party, to its successor in connection with a merger, acquisition, corporate reorganization, or sale of all or substantially all of its assets.
+
+Entire Agreement
+
+This Agreement together with the Order Form(s) and applicable Exhibit(s) constitutes the entire agreement between the parties hereto pertaining to the subject matter hereof, and any and all prior or contemporaneous written or oral agreements existing between the parties hereto and related to the subject matter hereof are expressly canceled. No modification, amendment or waiver of any provision of this Agreement will be effective unless in writing and signed by both parties hereto. Notwithstanding any language to the contrary therein, no terms or conditions stated in a Customer purchase order or in any other Customer order documentation (other than with regard to capacity licensed, Term, Service, bill to, ship to, pricing) shall be incorporated into or form any part of this Agreement, and all such terms or conditions shall be null and void. Any failure to enforce any provision of this Agreement shall not constitute a waiver thereof or of any other provision.
+
+Governing Law
+
+These Terms of Service shall be governed by the laws of the State of California without regard to the principles of conflicts of law. You hereby expressly agree to submit to the exclusive personal jurisdiction of the federal and state courts of the State of California for the purpose of resolving any dispute relating to your access to or use of the Service.

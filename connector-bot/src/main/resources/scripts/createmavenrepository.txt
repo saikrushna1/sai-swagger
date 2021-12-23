@@ -1,0 +1,4 @@
+mvn install:install-file -Dfile=ant-sahi.jar -DgroupId=ant-sahi -DartifactId=ant-sahi -Dversion=1.0.0 -Dpackaging=jar
+https://maven.apache.org/download.cgi
+apache-maven-3.6.3-bin.zip
+add pathvariable to the above folder in .zip

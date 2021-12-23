@@ -1,0 +1,862 @@
+	
+public static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
+public static final String GRANT_TYPE = "grant_type";
+public static final String CLIENT_ID = "client_id";
+public static final String CLIENT_SECRET = "client_secret";
+public static final String BEARER = "Bearer";
+public static final String BASIC = "Basic";
+public static final String JSON_CONTENT = "application/json";
+public static final String SCOPE = "scope";
+public static final String ACCESS_TOKEN = "access_token";
+public static final int HTTP_UNAUTHORIZED = 401;
+public static final String AUTHORIZATION = "Authorization";
+public boolean scrapData = false;
+public static String scrappingFile = "";
+public static String patternValues = "";
+
+public static void main(String[] args) throws Exception {
+	String filePath=args[0]; 
+	String driverpath = args[1];
+	String callbackUrl=args[2];
+	String jobid=args[3];
+	patternValues = args[4];
+	
+	//String tokenURL = args[4];
+	//String clientId = args[5];
+	//String clientSecret = args[6];
+	//String scope = args[7];
+	
+	System.out.println("driverpath is: " + driverpath);
+	System.setProperty("webdriver.chrome.driver", driverpath);
+	
+	<CLASS_NAME> instance= new <CLASS_NAME>();
+
+	String videoPath=null;
+	//String oauthToken = getClientCredentials(tokenURL,clientId,clientSecret,scope);
+	String oauthToken = null;
+	
+	callbackUrl = callbackUrl.replaceAll("/$", "");
+	String appName = null;
+	boolean recordVideo = false;
+	String videoCallBack = callbackUrl + "/agent/job/web/playstatus";
+	String videoScrapfileCallBack = callbackUrl + "/agent/job/web/scrapfileplaystatus";
+	String noVideoCallBack = callbackUrl + "/api/job/updatestatusoauth";
+	String noVideoScrapfileCallBack = callbackUrl + "/api/job/web/scrapfileplaystatus";
+	String tempDir = System.getProperty("java.io.tmpdir");
+
+	try {
+		String content = new String(Files.readAllBytes(Paths.get(filePath)));
+		JSONObject jsonfileContent = new JSONObject(content);
+		JSONArray dataJsonArray =  jsonfileContent.getJSONArray("data");
+		JSONArray searchdataJsonArray =  jsonfileContent.getJSONArray("searchdata");
+		String filename =  jsonfileContent.getString("filename");
+		filename = filename.replace(".java", "");
+		recordVideo =  jsonfileContent.getBoolean("recordVideo");
+		String videoFormat =  jsonfileContent.getString("format");
+		appName =  jsonfileContent.getString("appname");
+
+		if (recordVideo) {
+			videoPath = instance.startVideo(tempDir, filename, videoFormat);
+		}
+		
+	    List<Object> dataList = dataJsonArray.toList();
+		List<String> data= new ArrayList<String>();
+
+		for(Object a: dataList) {
+			data.add(String.valueOf(a));
+		} 
+
+		List<Object> searchJsonList = searchdataJsonArray.toList();
+		List<String> searchData = new ArrayList<String>();
+		for(Object searchObj: searchJsonList) {
+			searchData.add(String.valueOf(searchObj));
+		} 
+
+		instance.setUp();
+		System.out.println("Starting Script"); 
+		instance.test(data,searchData);
+		System.out.println("Stop Script"); 
+		instance.tearDown();
+		
+		if (recordVideo) {
+		Thread.sleep(30000);
+			instance.stopVideo(tempDir);
+			Thread.sleep(10000);
+		}
+		JsonObject response = null;
+		response = Json.createObjectBuilder().add("jobId", jobid).add("status","Success").add("reason", "").build();
+
+		instance.driver.quit();
+		if (recordVideo) {
+		String url =  videoCallBack;
+			if(scrappingFile !=null && !scrappingFile.trim().isEmpty() && scrappingFile.trim().length() > 0)
+				{
+					url = videoScrapfileCallBack;
+				}
+			sendExecutionStatus(url,response.toString(),oauthToken, videoPath,appName);
+		} else {
+			String url =  noVideoCallBack;
+			if(scrappingFile !=null && !scrappingFile.trim().isEmpty() && scrappingFile.trim().length() > 0)
+				{
+					url = noVideoScrapfileCallBack;
+				}
+			sendExecutionStatus(url,response.toString(),oauthToken);
+		}
+		if(videoPath != null ) {
+			File videoFile = new File(videoPath);
+			if(videoFile != null) {
+				videoFile.delete();
+			}
+		}
+	} catch(Exception e) {
+		e.printStackTrace();
+		try {
+			instance.driver.quit();
+			
+			if (recordVideo) {
+			Thread.sleep(30000);
+				instance.stopVideo(tempDir);
+			}
+		} catch(Exception driverEx) {
+			driverEx.printStackTrace();
+		}
+
+		try {
+			JsonObject response = null;
+			String message = e.getMessage();
+			if(StringUtils.isEmpty(message)) {
+				message = "Unable to execute the script with wrong input data";
+			}
+			response = Json.createObjectBuilder().add("jobId", jobid).add("status","Failed").add("reason", message).build();
+			if (videoPath != null && new File(videoPath).exists()) {
+					String url =  videoCallBack;
+			if(scrappingFile !=null && !scrappingFile.trim().isEmpty() && scrappingFile.trim().length() > 0)
+				{
+					url = videoScrapfileCallBack;
+				}
+		      sendExecutionStatus(url,response.toString(),oauthToken, videoPath,appName);
+	        } else {
+	        String url =  noVideoCallBack;
+			if(scrappingFile !=null && !scrappingFile.trim().isEmpty() && scrappingFile.trim().length() > 0)
+				{
+					url = noVideoScrapfileCallBack;
+				}
+		      sendExecutionStatus(url,response.toString(),oauthToken);
+            }
+            if(videoPath != null ) {
+			File videoFile = new File(videoPath);
+			if(videoFile != null) {
+				videoFile.delete();
+			}
+		}
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	} finally {
+		if(filePath != null ) {
+			File tempFile = new File(filePath);
+			if(tempFile != null) {
+				tempFile.delete();
+			}
+		}
+
+		/*if(videoPath != null ) {
+			File videoFile = new File(videoPath);
+			if(videoFile != null) {
+				videoFile.delete();
+			}
+		}*/
+	}
+}
+
+public void runTest(String scriptsRootDir, List<String> data, List<String> searchData, Boolean recordVideo, String format,
+		String callbackUrl, String jobid) throws Exception{
+	try {
+		if (recordVideo) {
+			startVideo(scriptsRootDir, this.getClass().getSimpleName(), format);
+		}
+
+		setUp();
+		test(data, searchData);
+		tearDown();
+
+		if (recordVideo) {
+		Thread.sleep(30000);
+			stopVideo(scriptsRootDir);
+		}
+
+		JsonObject response = null;
+		response = Json.createObjectBuilder().add("jobId", jobid).add("status", "Success").add("reason", "").build();
+		sendExecutionStatus(callbackUrl, response.toString());
+	} catch (Exception e) {
+		if (recordVideo) {
+			if (recordVideo) {
+			Thread.sleep(30000);
+				stopVideo(scriptsRootDir);
+			}
+		}
+		e.printStackTrace();
+		try {
+			driver.quit();
+		} catch (Exception driverEx) {
+			driverEx.printStackTrace();
+		}
+
+		try {
+			JsonObject response = null;
+			String message = e.getMessage();
+			if(StringUtils.isEmpty(message)) {
+				message = "";
+			}
+			response = Json.createObjectBuilder().add("jobId", jobid).add("status", "Failed").add("reason", message).build();
+			sendExecutionStatus(callbackUrl, response.toString());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+}
+
+public void stopVideo(String scriptRootDir) throws Exception {
+	try {
+		String line = "Powershell kill command is not yet executed";
+		while (line != null) {
+			Runtime.getRuntime().exec("\"" + scriptRootDir + "/stopVideo.bat\" \"" + scriptRootDir + "/SendSignal.exe\"");
+			Thread.sleep(5000);
+			
+			Process p=Runtime.getRuntime().exec("cmd /c tasklist | find /i \"powershell.exe\""); 
+            p.waitFor(); 
+            BufferedReader reader=new BufferedReader(new InputStreamReader(p.getInputStream()));
+            line = reader.readLine();
+			if(line != null) {
+				Thread.sleep(2000);
+			}
+		}
+	} catch (Exception e) {
+		e.printStackTrace();
+		throw new Exception(e.getMessage());
+	}
+}
+
+public static void sendExecutionStatus(String postUrl, String inputJson) throws Exception {
+	sendExecutionStatus(postUrl,inputJson,null);
+}
+
+public static void sendExecutionStatus(String postUrl, String inputJson,String bearerToken) throws Exception {
+
+if (!scrappingFile.isEmpty() && scrappingFile != null && scrappingFile.trim().length() > 0){
+	try{
+		JSONObject obj = new JSONObject(inputJson);
+	CloseableHttpClient httpclient = HttpClients.createDefault();
+	File scrappingCsvFile = null;
+	if(scrappingFile !=null && !scrappingFile.trim().isEmpty() )
+	{
+		scrappingCsvFile = new File(scrappingFile);
+	}
+
+	HttpEntity entity = MultipartEntityBuilder
+			.create()
+			.addBinaryBody("scrappingFile", scrappingCsvFile)
+			.addTextBody("jobId", obj.get("jobId").toString())
+			.addTextBody("status", obj.get("status").toString())
+			.addTextBody("reason", obj.get("reason").toString())
+			.build();
+
+	HttpPost httpPost = new HttpPost(postUrl);
+	if(bearerToken != null){
+		httpPost.addHeader(AUTHORIZATION, "Bearer " + bearerToken);
+	}
+	
+	httpPost.setEntity(entity);
+	HttpResponse response = httpclient.execute(httpPost);
+	HttpEntity result = response.getEntity();
+	System.out.println(result);
+	}catch(Exception e){
+	e.printStackTrace();
+	}
+	
+
+	
+}else{
+	URL url = new URL(postUrl);
+	System.out.println(inputJson);
+	HttpURLConnection con = (HttpURLConnection) url.openConnection();
+	con.setRequestMethod("POST");
+	
+	if(bearerToken != null){
+    	con.setRequestProperty("Authorization", "Bearer " + bearerToken);
+    }
+    
+	con.setRequestProperty("Content-Type", "application/json; utf-8");
+	con.setRequestProperty("Accept", "application/json");
+
+	con.setDoOutput(true);
+
+	try (OutputStream os = con.getOutputStream()) {
+		byte[] input = inputJson.getBytes("utf-8");
+		os.write(input, 0, input.length);
+	}
+
+	int code = con.getResponseCode();
+	System.out.println(code);
+
+	try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
+		StringBuilder response = new StringBuilder();
+		String responseLine = null;
+		while ((responseLine = br.readLine()) != null) {
+			response.append(responseLine.trim());
+		}
+		System.out.println(response.toString());
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+}
+
+	
+	
+}
+
+public static void sendExecutionStatus(String postUrl, String inputJson,String bearerToken,String videoFilePath,String project) throws Exception
+{
+	CloseableHttpClient httpclient = HttpClients.createDefault();
+	File file = null;
+	if(videoFilePath !=null && !videoFilePath.trim().isEmpty() )
+	{
+	 file = new File(videoFilePath);
+	}
+	File scrappingCsvFile = null;
+	if(scrappingFile !=null && !scrappingFile.trim().isEmpty() )
+	{
+		scrappingCsvFile = new File(scrappingFile);
+	}
+	HttpEntity entity = null;
+	if (!scrappingFile.isEmpty() && scrappingFile != null && scrappingFile.trim().length() > 0){
+	entity = MultipartEntityBuilder
+			.create()
+			.addBinaryBody("FileVideo", file)
+			.addBinaryBody("scrappingFile", scrappingCsvFile)
+			.addTextBody("project", project)
+			.addTextBody("status", inputJson)
+			.build();
+	}else{
+		entity = MultipartEntityBuilder
+			.create()
+			.addBinaryBody("FileVideo", file)
+			.addTextBody("project", project)
+			.addTextBody("status", inputJson)
+			.build();
+	}
+	HttpPost httpPost = new HttpPost(postUrl);
+	if(bearerToken != null){
+		httpPost.addHeader(AUTHORIZATION, "Bearer " + bearerToken);
+	}
+	
+	httpPost.setEntity(entity);
+	HttpResponse response = httpclient.execute(httpPost);
+	HttpEntity result = response.getEntity();
+	System.out.println(result);
+}
+
+private static String getClientCredentials(String tokenServerUrl,String clientId,String clientSecret, String scope) {
+	String accessToken = getAccessToken(tokenServerUrl,clientId,clientSecret,scope);
+	if(isValid(accessToken)){
+		System.out.println("Successfully generated Access token for client_credentials grant_type ");
+	}
+	else{
+		System.out.println("Could not generate Access token for client_credentials grant_type");
+	}
+	return accessToken;
+}
+
+public static String getAccessToken(String tokenServerUrl,String clientId,String clientSecret, String scope) {
+	HttpPost post = new HttpPost(tokenServerUrl);
+	//		String clientId = oauthDetails.getClientId();
+	//		String clientSecret = oauthDetails.getClientSecret();
+	//		String scope = oauthDetails.getScope();
+
+	List<BasicNameValuePair> parametersBody = new ArrayList<BasicNameValuePair>();
+	parametersBody.add(new BasicNameValuePair(GRANT_TYPE,GRANT_TYPE_CLIENT_CREDENTIALS));
+
+	parametersBody.add(new BasicNameValuePair(CLIENT_ID,
+			clientId));
+
+	parametersBody.add(new BasicNameValuePair(
+			CLIENT_SECRET, clientSecret));
+
+	if (isValid(scope)) {
+		parametersBody.add(new BasicNameValuePair(SCOPE,
+				scope));
+	}
+
+	HttpClient client = HttpClientBuilder.create().build();
+	HttpResponse response = null;
+	String accessToken = null;
+	try {
+		post.setEntity(new UrlEncodedFormEntity(parametersBody, HTTP.UTF_8));
+
+		response = client.execute(post);
+		int code = response.getStatusLine().getStatusCode();
+		if (code == HTTP_UNAUTHORIZED) {
+			System.out
+			.println("Authorization server expects Basic authentication");
+			// Add Basic Authorization header
+			post.addHeader(
+					AUTHORIZATION,
+					getBasicAuthorizationHeader(clientId,
+							clientSecret));
+			System.out.println("Retry with client credentials");
+			post.releaseConnection();
+			response = client.execute(post);
+			code = response.getStatusLine().getStatusCode();
+			if (code == 401 || code == 403) {
+				System.out.println("Could not authenticate using client credentials.");
+				throw new RuntimeException(
+						"Could not retrieve access token for client");
+			}
+		}
+		accessToken = handleJsonResponse(response);
+		
+	} catch (ClientProtocolException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return accessToken;
+}
+
+public static String handleJsonResponse(HttpResponse response) {
+	/*Map<String, String> oauthLoginResponse = null;*/
+	String contentType = response.getEntity().getContentType().getValue();
+	try {
+		String string = EntityUtils.toString(response.getEntity());
+		JSONObject responseJson = new JSONObject(string);
+		if(responseJson.has("access_token"))
+		{
+		  return  (String)responseJson.get("access_token");
+		}
+		//oauthLoginResponse = (Map<String, String>) new JSONParser().parse(string);
+	} catch(Exception e) {
+	 	e.printStackTrace();
+	}
+	return null;
+}
+
+public static String getAuthorizationHeaderForAccessToken(String accessToken) {
+	return BEARER + " " + accessToken;
+}
+
+public static String getBasicAuthorizationHeader(String username, String password) {
+	return BASIC + " " + encodeCredentials(username, password);
+}
+
+public static String encodeCredentials(String username, String password) {
+	String cred = username + ":" + password;
+	String encodedValue = null;
+	byte[] encodedBytes = Base64.encodeBase64(cred.getBytes());
+	encodedValue = new String(encodedBytes);
+	System.out.println("encodedBytes " + new String(encodedBytes));
+	byte[] decodedBytes = Base64.decodeBase64(encodedBytes);
+	System.out.println("decodedBytes " + new String(decodedBytes));
+	return encodedValue;
+}
+
+public static boolean isValid(String str) {
+	return (str != null && str.trim().length() > 0);
+}
+
+public String startVideo(String scriptsRootDir, String fileName, String format) throws Exception {
+	String recordFolder = scriptsRootDir + "/playbackVideos";
+	if (!new File(scriptsRootDir + "/playbackVideos").exists()) {
+		new File(scriptsRootDir + "/playbackVideos").mkdir();
+	}
+
+	stopVideo(scriptsRootDir);
+
+	String recordFileName = fileName + new Date().getTime() + format;
+	Runtime.getRuntime().exec(
+			"cmd /c start /min /wait powershell.exe ffmpeg -f gdigrab -i desktop -framerate 32 -vcodec libx264 "
+					+ recordFolder + "/" + recordFileName);
+	Thread.sleep(5000);
+	
+	double size = 0;
+	while (size <= 1) {
+		File videoFile = new File(recordFolder + "/" + recordFileName);
+		size = videoFile.length();
+		System.out.println("Video recording is not started yet");
+	}
+	System.out.println("Video recording is started...");
+	return recordFolder + "/" + recordFileName;
+}
+public WebElement getElement(String elementId) {
+  String[] elementIds = elementId.replace("'", "\"").split("\\$\\$");
+  for (int i = 0; i < elementIds.length; i++) {
+    try {
+      boolean patternFound = false;
+      String elementIdValue = elementIds[i];
+      for (String pattern: patternValues.split(";")) {
+        if (Pattern.matches(".*" + pattern + ".*", elementIdValue)) {
+          patternFound = true;
+          break;
+        }
+      }
+      if (!patternFound) {
+        String locatorName = elementIds[i].split("=")[0];
+        String targetValue = elementIds[i].substring(elementIds[i].indexOf("=") + 1);
+        if (StringUtils.equals(locatorName, "name")) {
+          return driver.findElement(By.name(targetValue));
+        } else if (StringUtils.equals(locatorName, "xpath")) {
+          if ((targetValue.contains("[@") || targetValue.contains("contains(.,")) && !targetValue.contains("=\"\"")) {
+            targetValue = targetValue.replace("/svg", "/*");
+            return driver.findElement(By.xpath(targetValue));
+          }
+        } else if (StringUtils.equals(locatorName, "linkText")) {
+          return driver.findElement(By.linkText(targetValue));
+        } else if (StringUtils.equals(locatorName, "partialLinkText")) {
+          return driver.findElement(By.partialLinkText(targetValue));
+        } else if (StringUtils.equals(locatorName, "cssSelector")) {
+          return driver.findElement(By.cssSelector(targetValue));
+        } else if (StringUtils.equals(locatorName, "id")) {
+          return driver.findElement(By.id(targetValue));
+        } else if (StringUtils.equals(locatorName, "class")) {
+          return driver.findElement(By.className(targetValue));
+        }
+      }
+    } catch(Exception e) {}
+  }
+  return null;
+}
+
+public List < WebElement > getElements(String locatorName, String elementId) {
+  List < WebElement > objects = new ArrayList < WebElement > ();
+  if (StringUtils.equals(locatorName, "name")) {
+    return driver.findElements(By.name(elementId));
+  } else if (StringUtils.equals(locatorName, "xpath")) {
+    if (elementId.contains("[") && !elementId.contains("=\"\"")) {
+      return driver.findElements(By.xpath(elementId));
+    }
+  } else if (StringUtils.equals(locatorName, "linkText")) {
+    return driver.findElements(By.linkText(elementId));
+  } else if (StringUtils.equals(locatorName, "partialLinkText")) {
+    return driver.findElements(By.partialLinkText(elementId));
+  } else if (StringUtils.equals(locatorName, "cssSelector")) {
+    return driver.findElements(By.cssSelector(elementId));
+  } else if (StringUtils.equals(locatorName, "id")) {
+    return driver.findElements(By.id(elementId));
+  } else if (StringUtils.equals(locatorName, "class")) {
+    return driver.findElements(By.className(elementId));
+  }
+  return objects;
+}
+
+public boolean checkElementExist(String elementId, List < String > data, int[] dataCount) throws Exception {
+  String[] elementIds = elementId.replace("'", "\"").split("\\$\\$");
+  if (iteration == 0) {
+    driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+  } else {
+    driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+  }
+  for (int i = 0; i < elementIds.length; i++) {
+    boolean patternFound = false;
+    String elementIdValue = elementIds[i];
+    for (String pattern: patternValues.split(";")) {
+      if (Pattern.matches(".*" + pattern + ".*", elementIdValue)) {
+        patternFound = true;
+        break;
+      }
+    }
+    if (!patternFound) {
+      String locatorName = elementIds[i].split("=")[0];
+      String targetValue = elementIds[i].substring(elementIds[i].indexOf("=") + 1);
+      foundId = locatorName + "=" + targetValue;
+      List < WebElement > objects = getElements(locatorName, targetValue);
+      if (objects != null && objects.size() != 0) {
+        for (int j = 0; j < objects.size(); j++) {
+          String type = objects.get(j).getAttribute("type");
+          if (type != null && (type.equals("radio") || type.equals("checkbox"))) {
+            if (locatorName.equalsIgnoreCase("xpath") && StringUtils.isEmpty(objects.get(j).getAttribute("value")) && StringUtils.isEmpty(objects.get(j).getText())) {
+              if (objects.get(j).isEnabled()) {
+                driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+                return true;
+              }
+            } else if (locatorName.equalsIgnoreCase("xpath") && !StringUtils.isEmpty(objects.get(j).getText())) {
+              driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+              return true;
+            } else if (locatorName.equalsIgnoreCase("xpath") && !StringUtils.isEmpty(objects.get(j).getAttribute("value"))) {
+              driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+              return true;
+            } else if (getElements("xpath", "//label[contains(.,'" + data.get(dataCount[0]) + "')]/input[@type='" + type + "'][@" + locatorName + "='" + elementId + "']").size() != 0) {
+              driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+              return true;
+            } else if (getElements("xpath", "//input[contains(.,'" + data.get(dataCount[0]) + "')][@type='radio'][@" + locatorName + "='" + elementId + "']").size() != 0) {
+              driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+              return true;
+            }
+          } else {
+            if (objects.get(j).isEnabled() && objects.get(j).isDisplayed()) {
+              driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+              return true;
+            }
+          }
+          break;
+        }
+      }
+      driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+    }
+  }
+  driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+  return false;
+}
+
+public void enterText(WebElement element, String value) throws Exception {
+	if(element == null) {
+		throw new Exception("Unable to Enter "+ value +" into the object with target value " + element);
+	}
+	try {
+		element.clear();
+		element.sendKeys(value);
+	} catch (Exception e) {
+		try {
+			js.executeScript("arguments[0].value='" + value + "';", element);
+		} catch (Exception e2) {
+			throw new Exception("Unable to Enter "+ value +" into the object with target value " + element);
+		}
+	}
+}
+
+public void click(String elementId, List < String > data, int[] dataCount) throws Exception {
+  Actions actions = new Actions(driver);
+  String actualElementId = elementId;
+  if (StringUtils.equals(prevElementId, elementId)) {
+    elementId = foundId;
+  } else {
+    prevElementId = elementId;
+  }
+  String[] elementIds = elementId.replace("'", "\"").split("\\$\\$");
+  for (int i = 0; i < elementIds.length; i++) {
+    boolean patternFound = false;
+    String elementIdValue = elementIds[i];
+    for (String pattern: patternValues.split(";")) {
+      if (Pattern.matches(".*" + pattern + ".*", elementIdValue)) {
+        patternFound = true;
+        break;
+      }
+    }
+    if (!patternFound) {
+      String locatorName = elementIds[i].split("=")[0];
+      String targetValue = elementIds[i].substring(elementIds[i].indexOf("=") + 1);
+      if (StringUtils.contains(targetValue, "StyledAvatar-sqcyr7-0 indexc-avatar")) {
+        targetValue = "//figure[contains(@class,'StyledAvatar-sqcyr7-0 index')]";
+      }
+      foundId = locatorName + "=" + targetValue;
+      List < WebElement > objects = getElements(locatorName, targetValue);
+      if (objects != null && objects.size() != 0) {
+        for (int j = 0; j < objects.size(); j++) {
+          String type = objects.get(j).getAttribute("type");
+          if (type != null && (type.equals("radio") || type.equals("checkbox"))) {
+            if (locatorName.equalsIgnoreCase("xpath") && StringUtils.isEmpty(objects.get(j).getAttribute("value")) && StringUtils.isEmpty(objects.get(j).getText())) {
+              try {
+                objects.get(j).click();
+                return;
+              } catch(StaleElementReferenceException e) {
+                Thread.sleep(30000);
+                actions.moveToElement(objects.get(j)).click().perform();
+                return;
+              } catch(Exception e) {}
+            } else if (locatorName.equalsIgnoreCase("xpath") && !StringUtils.isEmpty(objects.get(j).getText())) {
+              WebElement element = getElement("xpath=//input[@type='" + type + "'][text()='" + data.get(dataCount[0]++));
+              try {
+                element.click();
+                return;
+              } catch(StaleElementReferenceException e) {
+                Thread.sleep(30000);
+                actions.moveToElement(element).click().perform();
+                return;
+              } catch(Exception e) {}
+            } else if (locatorName.equalsIgnoreCase("xpath") && !StringUtils.isEmpty(objects.get(j).getAttribute("value"))) {
+              WebElement element = getElement("xpath=//input[@type='" + type + "'][@value='" + data.get(dataCount[0]++) + "']");
+              try {
+                element.click();
+                return;
+              } catch(StaleElementReferenceException e) {
+                Thread.sleep(30000);
+                actions.moveToElement(element).click().perform();
+                return;
+              } catch(Exception e) {}
+            } else if (getElements("xpath", "//label[contains(.,'" + data.get(dataCount[0]) + "')]/input[@type='" + type + "'][@" + locatorName + "='" + targetValue + "']").size() != 0) {
+              WebElement element = getElement("xpath=//label[contains(.,'" + data.get(dataCount[0]++) + "')]/input[@type='" + type + "'][@" + locatorName + "='" + targetValue + "']");
+              try {
+                element.click();
+                return;
+              } catch(StaleElementReferenceException e) {
+                Thread.sleep(30000);
+                actions.moveToElement(element).click().perform();
+                return;
+              } catch(Exception e) {}
+            } else if (getElements("xpath", "//input[contains(.,'" + data.get(dataCount[0]) + "')][@type='" + type + "'][@" + locatorName + "='" + targetValue + "']").size() != 0) {
+              WebElement element = getElement("xpath=//input[contains(.,'" + data.get(dataCount[0]++) + "')][@type='" + type + "'][@" + locatorName + "='" + targetValue + "']");
+              try {
+                element.click();
+                return;
+              } catch(StaleElementReferenceException e) {
+                Thread.sleep(30000);
+                actions.moveToElement(element).click().perform();
+                return;
+              } catch(Exception e) {}
+            }
+          } else {
+            try {
+              objects.get(j).click();
+              return;
+            } catch(StaleElementReferenceException e) {
+              Thread.sleep(30000);
+              actions.moveToElement(objects.get(j)).click().perform();
+              return;
+            } catch(Exception e) {}
+          }
+        }
+      }
+    }
+  }
+
+  boolean excludingPatternMatch = false;
+  for (String pattern: patternValues.split(";")) {
+    if (StringUtils.contains(elementId, pattern)) {
+      excludingPatternMatch = true;
+      break;
+    }
+  }
+  if (excludingPatternMatch) {
+    return;
+  } else {
+    throw new Exception("Unable to Click the object using following target values:\n" + actualElementId);
+  }
+}
+
+	public boolean validateText(List<String> searchData, int[] searchCount) throws Exception {
+	boolean textFound = false;
+	int iteration = 1;
+	Thread.sleep(5000);
+	while (!textFound && iteration <= 3) {
+		int noOfFrames = driver.findElements(By.tagName("iframe")).size();
+		if(noOfFrames != 0) {
+			JavascriptExecutor jsExecutor = (JavascriptExecutor)driver;
+			String currentFrame = jsExecutor.executeScript("return self.name").toString();
+			for (int i = 0; i < noOfFrames; i++) {
+				if(i == 0) {
+					driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+				} else {
+					driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+				}
+				driver.switchTo().defaultContent();
+				driver.switchTo().frame(i);
+				
+				if (driver.findElements(By.xpath("//*[contains(text(), '" + searchData.get(searchCount[0]) + "')]")).size() != 0) {
+					searchCount[0]++;
+					driver.switchTo().defaultContent();
+					driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+					return true;
+				}
+			}
+			driver.switchTo().defaultContent();
+			if(StringUtils.isNotEmpty(currentFrame)) {
+				driver.switchTo().frame(currentFrame);
+			}
+		}
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+
+		if (driver.findElements(By.xpath("//*[contains(., '" + searchData.get(searchCount[0]) + "')]")).size() != 0) {
+			searchCount[0]++;
+			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+			return true;
+		} else {
+			iteration++;
+		}
+	}
+	driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+	searchCount[0]++;
+	return textFound;
+}
+
+public void scrapTableData(String tableName, String xpath, int columnCount) throws Exception {
+	if(StringUtils.isEmpty(tableName)) {
+		tableName = String.valueOf(new Date().getTime());
+	}
+	Thread.sleep(30000);
+	scrapData = true;
+	String scriptsRootDir = System.getProperty("java.io.tmpdir");
+	String recordFolder = scriptsRootDir.replace("\\", "/") + "/scrappedData";
+	if (!new File(scriptsRootDir + "/scrappedData").exists()) {
+		new File(scriptsRootDir + "/scrappedData").mkdir();
+	}
+	String htmlData = "";
+	try {
+		htmlData = "<scrap-root>" + driver.findElement(By.xpath(xpath)).getAttribute("innerHTML") + "</scrap-root>";
+	} catch (Exception e) {
+		throw new Exception(e.getCause());
+	}
+	String xmlFile = recordFolder + "/" + tableName + ".xml";
+	htmlData = htmlData.replace(",", "$$");
+	FileWriter writer = new FileWriter(xmlFile);
+	writer.write(htmlData);
+	writer.close();
+
+	FileInputStream stream = new FileInputStream(xmlFile);
+	XMLInputFactory inputFactory = XMLInputFactory.newFactory();
+	inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
+	XMLStreamReader reader = inputFactory.createXMLStreamReader(stream);
+
+	/*int thCount = htmlData.split("<th>").length;
+			if(thCount == 0) {
+				thCount = htmlData.split("<th ").length;
+			}*/
+		if (columnCount > 0) {
+		String text = "";
+		while (reader.hasNext()) {
+			int xmlLine = reader.next();
+			switch (xmlLine) {
+			case XMLStreamConstants.START_ELEMENT:
+				break;
+			case XMLStreamConstants.END_ELEMENT:
+				break;
+			case XMLStreamConstants.CHARACTERS:
+			case XMLStreamConstants.SPACE:
+				if (!reader.getText().trim().isEmpty()) {
+					text = (StringUtils.isEmpty(text) ? "" : text + ",") + reader.getText();
+					System.out.println(text);
+				}
+				break;
+			}
+		}
+		int index = 0;
+		String line = "";
+		String arrs[] = text.split(",");
+		String lines[] = new String[arrs.length / (columnCount)];
+		for (int i = 1; i <= arrs.length; i++) {
+			if (i % (columnCount) == 0) {
+				line = line + "," + arrs[i - 1];
+				lines[index++] = line;
+				line = "";
+			} else {
+				line = (StringUtils.isEmpty(line) ? "" : line + ",") + arrs[i - 1];
+			}
+		}
+		
+		Path path = Paths.get(recordFolder + "/" + tableName + ".csv");
+		Files.deleteIfExists(path);
+		Files.createFile(path);
+		File file = new File(path.toString());
+		FileWriter outputfile = new FileWriter(file);
+		CSVWriter csvWriter = new CSVWriter(outputfile);
+		
+		for (String csvLine : lines) {
+			csvWriter.writeNext(csvLine.split(","));
+		}
+		csvWriter.close();
+		scrappingFile = recordFolder + "/" + tableName + ".csv";
+		//Files.deleteIfExists(Paths.get(xmlFile));
+	} else {
+		//Files.deleteIfExists(Paths.get(xmlFile));
+		throw new Exception("Didn't find any table headings for the given xpath");
+	}
+}

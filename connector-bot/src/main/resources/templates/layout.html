@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>Peddle Digitals</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../static/assets/vendors/mdi/css/materialdesignicons.min.css" th:href="@{/assets/vendors/mdi/css/materialdesignicons.min.css}"/>
+    <link rel="stylesheet" href="../static/assets/vendors/css/vendor.bundle.base.css" th:href="@{/assets/vendors/css/vendor.bundle.base.css}"/>
+
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/assets/css/style.css" th:href="@{/assets/css/style.css}"/>
+    <link rel="stylesheet" href="../static/assets/css/overwrite.css" th:href="@{/assets/css/overwrite.css}"/>
+    <link rel="stylesheet" href="../static/assets/menustyles.css" th:href="@{/assets/menustyles.css}"/>
+    <!-- End layout styles -->
+    <link rel="icon" type="image/png" th:href="@{/assets/images/favicon.ico}" />
+        <link rel="stylesheet" href="http://static.jstree.com/3.0.0-beta3/assets/dist/themes/default/style.min.css"/>
+  </head>
+  <style>
+.br {
+	display: block;
+	margin-bottom: 0.5em;
+}
+
+.middle {
+	width: 20%;
+	float: left;
+	margin-right: 15px;
+}
+
+.left {
+	width: 17%;
+	float: left;
+}
+
+.script-files-list { color:#424242}
+.active { color:#007bff}
+
+.treeview-animated-element{
+	margin: 0px 1px 1px 33px;
+}
+
+#expList ul, li {
+  list-style: none;
+  cursor: pointer;
+}
+		
+#expList li {
+	line-height:140%;
+	text-indent:0px;
+	background-position: 1px 8px;
+	background-repeat: no-repeat;
+}
+
+#expList .collapsed:before {
+	font-family: FontAwesome;
+   content: "\f07b\00a0";
+   color: #efc722;
+}
+
+#expList .expanded:before {
+   content: '\f07c\00a0';
+   color: #3292ff;
+}
+
+.card-counter{
+    box-shadow: 2px 2px 10px #DADADA;
+    margin: 5px;
+    padding: 20px 10px;
+    background-color: #fff;
+    height: 100px;
+    border-radius: 5px;
+    transition: .3s linear all;
+  }
+
+  .card-counter:hover{
+    box-shadow: 4px 4px 20px #DADADA;
+    transition: .3s linear all;
+  }
+
+  .card-counter.primary{
+    background-color: #007bff;
+    color: #FFF;
+  }
+
+  .card-counter.danger{
+    background-color: #ef5350;
+    color: #FFF;
+  }  
+
+  .card-counter.success{
+    background-color: #66bb6a;
+    color: #FFF;
+  }  
+
+  .card-counter.info{
+    background-color: #26c6da;
+    color: #FFF;
+  }  
+
+  .card-counter i{
+    font-size: 5em;
+    opacity: 0.2;
+  }
+
+  .card-counter .count-numbers{
+    position: absolute;
+    right: 35px;
+    top: 20px;
+    font-size: 32px;
+    display: block;
+  }
+
+  .card-counter .count-name{
+    position: absolute;
+    right: 35px;
+    top: 65px;
+    font-style: italic;
+    text-transform: capitalize;
+    opacity: 0.5;
+    display: block;
+    font-size: 18px;
+  }
+</style>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+          <a class="navbar-brand brand-logo" href="/"> <img src="../static/assets/images/logo_dimen.png" th:src="@{/assets/images/logo_dimen.png}" height="80" width="80"/> </a>
+          <a class="navbar-brand brand-logo-mini" href="/"><img src="../static/assets/images/mobile-icon.png" th:src="@{/assets/images/mobile-icon.png}" alt="logo" /></a>
+        </div>
+        
+        
+        
+        <div class="navbar-menu-wrapper d-flex align-items-stretch">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+          
+          <div id='cssmenu'>
+        <ul>
+        <li th:classappend="${url == 'home'} ? 'active' : ''"><a th:href="@{/ui/home}">Home</a></li>
+        <!-- <li th:classappend="${url == 'dashboard'} ? 'active' : ''"><a th:href="@{/ui/jobs}">Dashboard</a></li> -->
+	        <li th:classappend="${url == 'jobs'} ? 'active' : ''"><a th:href="@{/ui/jobs}">Dashboard</a></li>
+			<li th:classappend="${url == 'scripts'} ? 'active' : ''"><a th:href="@{/ui/scripts}">Scripts</a></li>
+			<li th:classappend="${url == 'suites'} ? 'active' : ''"><a th:href="@{/ui/suites}">Test Suites</a></li>
+			<li th:classappend="${url == 'botAgent'} ? 'active' : ''"><a th:href="@{/ui/botAgents}" >Bot Agents</a></li>
+			<li th:classappend="${url == 'source'} ? 'active' : ''"><a th:href="@{/ui/source}">Edit Scripts</a></li>
+        </ul>
+        </div>
+          
+          
+
+          <ul class="navbar-nav navbar-nav-right">
+          
+            <li class="nav-item nav-profile dropdown">
+              <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+               
+                 <i class="mdi mdi-account"></i>
+                
+              </a>
+              <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                <!-- <a class="dropdown-item" href="#">
+                  <i class="mdi mdi-cached mr-2 text-success"></i> Activity Log </a> -->
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" th:href="@{/logout}"><i class="mdi mdi-logout mr-2 text-primary"></i>Logout</a>
+              </div>
+            </li>
+            
+            <li class="nav-item d-none d-lg-block full-screen-link">
+              <a class="nav-link">
+                <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
+              </a>
+            </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <!-- partial -->
+        <div class="main-panel" style="width: 100%">
+		<div layout:fragment="content"></div>
+		<th:block layout:fragment="script"></th:block>
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+          <footer class="footer">
+            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+              <!--<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020 | All rights reserved.</span>-->
+              <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021 Peddle Digital v3.0.1 | All rights reserved. </span>
+            </div>
+          </footer>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+    <script src="../static/assets/vendors/js/vendor.bundle.base.js" th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
+    
+    <!-- inject:js -->
+     <script src="../static/assets/js/off-canvas.js" th:src="@{/assets/js/off-canvas.js}"></script>
+    <script src="../static/assets/js/hoverable-collapse.js" th:src="@{/assets/js/hoverable-collapse.js}"></script>
+    <script src="../static/assets/js/misc.js" th:src="@{/assets/js/misc.js}"></script>
+    <!-- endinject -->
+   
+   <script src="../static/assets/menuscript.js" th:src="@{/assets/menuscript.js}"></script>
+   
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"> </script>
+	<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"> </script>
+<!--	<script src="../static/js/jquery-linenumbers.js" th:src="@{/js/jquery-linenumbers.js}"></script> -->
+	<script src="http://static.jstree.com/3.0.0-beta3/assets/dist/jstree.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" type="text/javascript" charset="utf-8"></script>
+   
+   <script>
+   $(document).ready(function() {
+	   $('#htmlcontent').load("C:\dump\scripts\agent\scriptsreports\summary-report.html");
+    var table = $('#recordedscripts').DataTable( {
+        fixedHeader: true,
+        "order": [[ 4, "desc" ]]
+    } );
+    var table = $('#usersuites').DataTable( {
+        fixedHeader: true,
+        "order": [[ 4, "desc" ]]
+    } );
+
+    
+	} );
+</script>
+<script>$('document').ready(function(){
+var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/tomorrow_night_bright");
+        editor.setShowPrintMargin(false);
+        editor.session.setMode("ace/mode/java");
+        editor.setValue("TestBot IDE");
+        editor.setReadOnly(true);
+        document.getElementById('editor').style.fontSize='14px';
+        $("#compileBtn").prop( "disabled", true );
+
+<!--		$('.fileContent').linenumbers({col_width:'75px'});-->
+		$('#scriptCompileStatus').css('width', '100%');
+	})
+</script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+var context = [[@{/}]];
+/*]]>*/
+$(document).ready(function() {
+    $('#jobs').DataTable({
+        "order": [[ 4, "desc" ]]
+    } );
+
+} );
+
+$('#compileBtn').on('click', function(){
+
+	var $this = $(this);
+    var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Compiling...';
+    if ($(this).html() !== loadingText) {
+      $this.data('original-text', $(this).html());
+      $this.html(loadingText);
+    }
+    $('#scriptCompileStatus').val('');
+	$('#saveBtn').css('display','none');
+	var url = window.location.pathname;
+	var id = url.toString().split('/')[url.toString().split('/').length-1];
+    $( "input" ).remove( "#aceEdit" );
+	var editor = ace.edit("editor");
+	editor.setReadOnly(false);
+	var fileData=editor.getSession().getValue();
+	$input = $('<input id="aceEdit" type="hidden" name="fileContent"/>').val(fileData);
+	$('#scriptForm').append($input);
+	dataString = $("#scriptForm").serialize();
+	console.log(dataString);
+	$.ajax({
+        type: "POST",
+        url: context+"api/content",
+        data: dataString,
+        dataType: "json",              
+        success: function( data, textStatus, jqXHR) {            
+            console.log(data);
+            $('#scriptCompileStatus').val(data.message)
+             if(data.status == 'success'){
+            	 $('#scriptCompileStatus').css('color','green');
+            	 $('#saveBtn').css('display','inline-block');
+             } else if(data.status == 'fail'){
+            	 $('#scriptCompileStatus').css('color','red');
+            	 $('#saveBtn').css('display','inline-block');
+             } 
+             else {
+            	 $('#scriptCompileStatus').css('color','red');
+            	 $('#saveBtn').css('display','none');
+             }
+            $this.html($this.data('original-text'));
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+             console.log("Something really bad happened " + textStatus);
+             $this.html($this.data('original-text'));
+        }
+    }); 
+});
+
+$('#saveBtn').on('click', function(){
+
+	var $this = $(this);
+    var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> saving...';
+    if ($(this).html() !== loadingText) {
+      $this.data('original-text', $(this).html());
+      $this.html(loadingText);
+    }	
+    $('#status').css('display','none');
+	
+	var url = window.location.pathname;
+	var id = url.toString().split('/')[url.toString().split('/').length-1];
+    $('#aceEdit').val('');
+    $( "input" ).remove( "#aceEdit" );
+	var editor = ace.edit("editor");
+	var fileData=editor.getSession().getValue();
+	editor.setReadOnly(false);
+	$input = $('<input id='aceEdit' type="hidden" name="fileContent"/>').val(fileData);
+	$('#scriptForm').append($input);
+
+	dataString = $("#scriptForm").serialize();
+	$.ajax({
+        type: "POST",
+        url: context+"api/contentSaving",
+        data: dataString,
+        dataType: "json",              
+        success: function( data, textStatus, jqXHR) {            
+            console.log(data);
+             $('#scriptCompileStatus').val(data.message);
+             $('#status').css('display','block');
+             if(data.status == 'success'){
+            	
+            	 $('.fileContent').val('');
+            	 $('#saveBtn').css('display','none');
+            	 $('#scriptCompileStatus').css('color','green');          
+            	 $('#compileBtn').hide();
+            	 $("#compileBtn").prop( "disabled", true );
+             } 
+             else {
+            	 $('#scriptCompileStatus').css('color','red');
+            	// $('#saveBtn').css('display','none');
+             } 
+             setTimeout(function(){ $('#scriptCompileStatus').val(''); }, 3000);
+            $this.html($this.data('original-text'));
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+             console.log("Something really bad happened " + textStatus);
+             $this.html($this.data('original-text'));
+        }
+    }); 
+}); 
+
+$('#createScriptBtn').on('click', function(){	
+	var url = window.location.pathname;
+	var id = url.toString().split('/')[url.toString().split('/').length-1];
+	
+	var aName = $("#appName").val(); 
+	var fName = $("#fileName").val(); 
+	var fUrl = $("#url").val(); 
+	var moduleName = $("#moduleName").val(); 
+	var typeoftest = $("#typeoftest").val(); 
+   if(aName == ""){
+	   alert("Please enter application name")
+   }else if(fName == ""){
+	   alert("Please enter script name")
+   }else if(fUrl == ""){
+	   alert("Please enter URL")
+   }else if(moduleName == ""){
+	   alert("Please enter Module Name")
+   }else if(typeoftest == "select"){
+	   alert("Please enter URL")
+   }
+   else{
+	dataString = $("#createScriptForm").serialize();
+	$.ajax({
+        type: "POST",
+        url: context+"api/saveNewApplication",
+        data: dataString,
+        dataType: "json",              
+        success: function( data, textStatus, jqXHR) {            
+             if(data.status == 'success'){
+            	 $("#newScript").hide();
+            	 alert(data.message);
+            	 window.location = context+'ui/source';
+             } 
+             else {
+            	 alert(data.message);
+             } 
+             
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+             console.log("Something really bad happened " + textStatus);
+             $this.html($this.data('original-text'));
+        }
+    }); 
+   }
+});
+
+$('#botAgentsRefresh').on('click', function(){
+	
+	var $this = $(this);   
+    $('#botAgentsRefresh').addClass('fa-spin');
+    
+    $.ajax({
+        type: "GET",
+        url: context+"api/botAgents",
+        dataType: "json",              
+        success: function( data, textStatus, jqXHR) {            
+            console.log(data.data);
+            
+             if(data.status == 'success'){
+            	var json = JSON.parse(data.data);
+            	console.log(json);
+            	$('#botAgentTableBody').empty();
+            	for (var car of json) 
+				  {
+            		var color = car.status == 'Active' ? 'green' : 'red';
+            		var tr = $('<tr>'+
+			            '<td ><span>'+car.sno+'</span> </td> '+
+			            '<td ><span>'+car.agentId+'</span> </td> '+
+			            '<td ><span>'+car.agentName+'</span> </td> '+
+		                '<td><span> '+car.ipAddress+' </span></td>'+
+		                '<td><span>'+car.lastUpdatedTimestamp+'</span></td>'+
+		                '<td style="background-color:'+color+'">'+
+		                '<span style="color: white;">'+car.status+'</span>'+
+		                '</td>'+
+            			'</tr>');
+            		$('#botAgentTableBody').append(tr);
+				    console.log(car.id);
+				  }
+             } 
+             
+             $('#botAgentsRefresh').removeClass('fa-spin')
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+             console.log("Something really bad happened " + textStatus);
+             $('#botAgentsRefresh').removeClass('fa-spin')
+        }
+    }); 
+    
+});
+</script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+var context = [[@{/}]];
+/*]]>*/
+		
+   $(document).ready(function() {
+		$(function prepareList() {
+			$('#expList').find('li:has(ul)').unbind('click').click(function(event) {
+				if(this == event.target) {
+					$(this).toggleClass('expanded');
+					$(this).children('ul').toggle('medium');
+				}
+				return false;
+			}).addClass('collapsed').removeClass('expanded').children('ul').hide();
+		 
+			//Hack to add links inside the cv
+			$('#expList a').unbind('click').click(function() {
+				window.open($(this).attr('href'));
+				return false;                  
+			});
+			//Create the button functionality
+			$('#expandList').unbind('click').click(function() {
+				$('.collapsed').addClass('expanded');
+				$('.collapsed').children().show('medium');
+			})
+			$('#collapseList').unbind('click').click(function() {
+				$('.collapsed').removeClass('expanded');
+				$('.collapsed').children().hide('medium');
+			})
+		});
+
+		});
+
+		function findScript(value, scriptType,rootDir){
+		 var editor = ace.edit("editor");
+			$('#scriptType').val(scriptType);
+			$('#currentFile').val(value);
+			$('#rootDir').val(rootDir);
+			//console.log('scriptType : '+scriptType)
+			if(scriptType == 'WEB' || scriptType == 'PYTEST'){
+				$('#saveBtn').css('display','none');           	        
+	           	 $('#compileBtn').css('display','inline-block');
+			}else if(scriptType == 'CLI' || scriptType == 'DESKTOP' || scriptType == 'PYWIN'){
+				$('#saveBtn').css('display','inline-block');           	          
+	           	 $('#compileBtn').attr('style','display:none !important');	
+	           	 document.getElementById('compileBtn').style.display = 'none !important'
+	           	/*  var fExt = getExt(value);
+	           	 if(fExt=='py'){
+	           		$('#saveBtn').css('display','none');           	        
+		           	 $('#compileBtn').css('display','inline-block');
+	           	 }else{
+	           		$('#saveBtn').css('display','inline-block');           	          
+		           	 $('#compileBtn').attr('style','display:none !important');	
+		           	 document.getElementById('compileBtn').style.display = 'none !important'
+	           	 } */
+			}
+
+			editor.getSession().setValue('');
+        	$('#scriptCompileStatus').val('');
+        	dataString = $("#scriptForm").serialize();
+			$.ajax({
+		        type: "POST",
+		        url:context+"api/script/getFile",
+		        data:dataString,
+		        dataType: "json",              
+		        success: function( data, textStatus, jqXHR) {
+		            if(data.status == 'success'){
+		             editor.setReadOnly(false);
+		            	var json = (data.data);
+                        editor.getSession().setValue(json);
+                        $("#compileBtn").prop( "disabled", false );
+		            }
+		        },
+		        error: function(jqXHR, textStatus, errorThrown){
+		             console.log("Something really bad happened " + textStatus);
+		        }
+		    }); 
+		}
+		$(".script-files-list").click(function(){
+			$("li").removeClass("active");
+			$(this).toggleClass("active");
+			});
+
+
+
+
+		</script>
+<script>
+$(function () {
+	 var scripts = [];
+    $("#tree").jstree({
+        "checkbox": {
+            "keep_selected_style": true	
+        },
+            "plugins": ["checkbox"]
+    });
+    $("#tree").bind("changed.jstree",
+    function (e, data) {
+    	console.log(data);
+/*         console.log("Checked: " + data.node.id);
+        console.log("Parent: " + data.node.parent); 
+        console.log(e); */
+        var k=0;
+        scripts = [];
+        $('#scripttablebody').empty();
+        console.log(data.selected);
+        if(data.selected.length>0){
+        	for(var i=0;data.selected.length>i;i++){
+        		
+        		var listData = data.selected[i];
+        		console.log("listData");
+        		console.log(listData);
+        		//var filterListData = listData.split("_");
+        		try{
+        			var filterListData = JSON.parse(listData);
+            		console.log("filterListData");
+            		console.log(filterListData);
+            		
+            			
+            			k++;
+            			console.log("appName : "+filterListData.appName);
+            			console.log("ID : "+filterListData.id);
+            			console.log("fileName : "+filterListData.scriptFileName);
+            			console.log("payload : "+filterListData.http_payload);
+            			script = {}
+            			script ["content"] = filterListData.http_payload;
+            			scripts.push(script);
+                  		var tr = $('<tr>'+
+      			            '<td style="width:10px"><span>'+k+'</span> </td> '+
+      			            '<td style="width:10px"><span>'+filterListData.appName+'</span> </td> '+
+      			            '<td style="width:10px"><span>'+filterListData.scriptFileName+'</span> </td> '+
+      		                '<td style="width:10px"><span> '+filterListData.createdBy+' </span></td>'+
+      	/* 	                '<td style="width:10px"><span>'+filterListData[3]+'</span></td>'+ */
+                  			'</tr>');
+                  		$('#scripttablebody').append(tr);
+
+      				    console.log(scripts);
+            		
+        		}catch (e) {
+					// TODO: handle exception
+				}
+        		
+        		
+        	}
+        }else{
+        	console.log("empty");
+        	scripts = [];
+        	$('#scripttablebody').empty();
+        }
+        
+        //alert(JSON.stringify(data));
+    });
+    $('#suiteForm').submit(function(e) {
+    	e.preventDefault();
+        //Prevent default submission of form
+        if(scripts.length==0){
+        	alert("Please select at least one script");
+        	return false;
+        }
+        
+        suite = {}
+        suite ["suiteName"] = $("input[name=suiteName]").val();
+        suite ["suiteDesc"] = $("input[name=suiteDesc]").val();
+        //suite ["exeType"] = $("input[name='executionType']:checked").val();
+       // suite ["browserType"] = $('select[name="browserType"]').val();
+        suite ["job"] = scripts;
+        
+        console.log(JSON.stringify(suite));
+        
+        //Remove all errors
+        //$('input').next().remove();
+        
+        $.post({
+           url : context+'api/suite/createNewSuite',
+           data : JSON.stringify(suite),
+           contentType:"application/json; charset=utf-8",
+           dataType:"json",
+           success : function(res) {
+           	if(res.id!=null){
+           		window.location = context+'ui/suites';
+           	}else{
+           		alert("Suite name already exits");	
+           	}
+           },
+           error: function(XMLHttpRequest, textStatus, errorThrown) {
+        	     alert("something went wrong");
+        	  }
+        })
+     });
+
+});
+
+function updateAgent(value){
+    $.ajax({
+        type: "GET",
+        url: context+"api/updateAgent?agentId="+value,
+        dataType: "json",              
+        success: function( data, textStatus, jqXHR) {            
+            
+             if(data.status == 'success'){
+            	 alert("Updated sucessfully");
+             } 
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+        	alert("something went wrong");
+        }
+    }); 
+
+}
+function getExt(filename)
+{
+    var ext = filename.split('.').pop();
+    if(ext == filename) return "";
+    return ext;
+}
+</script>
+  </body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+
+<body>
+	<section layout:fragment="content">
+		<div class="content-wrapper">
+		<div class="page-header">
+				<h3 class="page-title">
+					<span class="page-title-icon bg-gradient-info text-white mr-2">
+						<i class="mdi mdi-home"></i>
+					</span>Test Suite Details
+				</h3>
+
+			</div>
+			<br />
+			<div>
+				<div class="row">
+				<div class="col-3">
+						<div id="updatetree">
+
+<!--  							<ul>
+								<li  th:id="all" th:class="intranet-folder">Script Files
+									<ul th:data-jstree='{"opened":true}' th:each="scriptFilesList : ${scriptFiles}">
+										<li th:data-jstree='{"selected":true}' th:class="jstree-open" th:id="${scriptFilesList.key}" class="script-files-list"><span
+											th:text="${scriptFilesList.key}"></span>
+											<ul>
+												<li  th:each="files : ${scriptFilesList.value}"
+													th:id="${scriptFilesList.key}+'_'+${files.id}+'_'+${files.scriptFileName}+'_'+${files.http_payload}+'_'+${files.createdBy}"
+													class="script-files-list" style="cursor: pointer;"><span
+													id="anchortag"
+													th:onclick="|findScript('${files}','${scriptFilesList.key}')|">
+														<i class="fa fa-file-text-o ic-w mr-1"></i> <span
+														th:text="${files.scriptFileName}"></span>
+												</span></li>
+											</ul></li>
+									</ul>
+								</li>
+							</ul> -->
+						</div>
+
+					</div>
+					<div class="col-sm">
+						<form id="suiteDetailsForm">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Suite Name</label> <input
+									type="text" disabled="disabled" class="form-control"
+									name="suiteName" th:value="${suite.suiteName}" id="suiteName"
+									aria-describedby="suiteHelp" placeholder="Enter suite" />
+
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPassword1">Suite Description</label> <input
+									type="text" disabled="disabled" class="form-control"
+									id="suiteDesc" th:value="${suite.suiteDesc}" name="suiteDesc"
+									placeholder="Suite description" />
+							</div>
+
+
+
+
+							<!-- <div class="card border-primary ">
+								<div class="card-header bg-primary">
+									<h6 style="color: #ffffff">Selected Scripts</h6>
+								</div> -->
+							<div class="card-body text-default">
+								<table id="suitedetailstable" class="table table-striped table-bordered">
+									<thead>
+										<tr>
+											<th scope="col">SNO</th>
+											<th scope="col">Application Name</th>
+											<th scope="col">Script Name</th>
+											<th scope="col">Created at</th>
+										</tr>
+									</thead>
+									<!-- <tbody id="scripttablebody">
+										<tr th:each="job : ${suite.job}">
+											<th scope="row"><span th:text="${jobStat.index+1}">appName</span></th>
+											<td><span th:text="${job.appName}">appName</span></td>
+											<td><span th:text="${job.scriptFileName}">scriptFileName</span></td>
+											<td><span th:text="${job.createdAt}">createdAt</span></td>
+										</tr>
+									</tbody> -->
+									<tbody id="scripttablebodyupdate" >
+
+										</tbody>
+								</table>
+							</div>
+							<label for="sel1">Target Browser Type:</label> <select
+								class="form-control" id="browserType" name="browserType">
+								<option value="chrome">Chrome</option>
+								<option value="mozilla">Mozilla</option>
+								<option value="ie">IE</option>
+								<!-- <option value="opera">Opera</option> -->
+								<option value="safari">Safari</option>
+								<option value="microsoftedge">Microsoft Edge</option>
+							</select> <br />
+							<div>
+								<div class="radio">
+									<label><input type="radio" value="0" checked="checked"
+										name="executionType" id="executionType" /> Execute Now</label> <label><input
+										type="radio" value="1" disabled="disabled" name="executionType" />Schedule Later</label>
+								</div>
+								<label class="switch">Parallel Execution  <input type="checkbox" name="parallelExecution" id="parallelExecution"/> <span
+									class="slider round"></span>
+								</label>
+							</div>
+							<!-- </div> -->
+							<br />
+							<div>
+							<input type="hidden" name="suiteId" id="suiteId" th:value="${suite.id}"/>
+								<button type="submit" class="btn btn-info" id="suiteDetails">Execute
+									</button>
+									
+									<button type="button" class="btn btn-info" id="saveSuite">Save
+									</button>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	
+	<th:block layout:fragment="script">
+	 <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+	  <script src="../static/js/jstree.min.js" th:src="@{/js/jstree.min.js}"></script>
+            <script th:inline="javascript">
+
+				var entryCheck = true;
+				$("#updatetree").jstree({
+            								"plugins": ["checkbox"]
+    									});
+				$(document).on('click', '.jstree-anchor', function(e) {
+					entryCheck = false;
+				});
+				$(document).on('click', '.jstree-icon', function(e) {
+					entryCheck = false;
+				});
+ 		$(document).ready(function() {
+			 var scriptArrayObj = [];
+			 /*<![CDATA[*/
+			 var scriptFiles = /*[[${scriptFiles}]]*/ 'default';
+			 var scripts = /*[[${suite.job}]]*/ 'default';
+			 /*]]>*/
+			 for (var key in scriptFiles) {
+				 var opened = false;
+				 var selected = false;
+				 var root = {};
+				 var rootState = {};
+			       opened = checkAppName(scripts,key);
+			       var scriptArray = scriptFiles[key];
+			       var childArray = [];
+			       for(var keyObj in scriptArray){
+			    	   var childObj = {};
+			    	   var state = {};
+			    	   var scriptObj = scriptArray[keyObj];
+			    	   selected = checkScriptName(scripts,key,scriptObj.scriptFileName);
+			    	   state["selected"] = selected==0?false:true;
+			    	   childObj["text"] = scriptObj.scriptFileName;
+			    	   scriptObj.jobid=selected;
+			    	   childObj["id"] = JSON.stringify(scriptObj);
+			    	   childObj["state"] = state;
+			    	   childArray.push(childObj);
+
+			       }
+			       rootState["opened"] = opened;
+			       root["text"] = key;
+			       root["state"] = rootState;
+			       root["children"] = childArray;
+			       scriptArrayObj.push(root);
+			       console.log("scriptArrayObj "+scriptArrayObj);
+			   }
+			 console.log("updated jstree data");
+			 console.log(scriptArrayObj);
+					 $("#updatetree").bind("changed.jstree",
+				 	    	    function (e, data) {
+		 	    	        var k=0;
+		 	    	        selectedCheckboxScripts = [];
+		 	    	        $('#scripttablebodyupdate').empty();
+		 	    	       console.log("selected scripts");
+		 	    	        console.log(data.selected);
+		 	    	        if(data.selected.length>0){
+		 	    	        	var filterListDataArray = [];
+		 	    	        	for(var i=0; data.selected.length>i;i++){
+		 	    	        		
+		 	    	        		var listData = data.selected[i];
+		 	    	        		//var filterListData = listData.split("_");
+		 	    	        		try{
+		 	    	        		 var jsonObj = JSON.parse(listData);
+		 	    	        		filterListDataArray.push(jsonObj);
+		 	    	            		
+		 	    	        		}catch (e) {
+		 	    						// TODO: handle exception
+		 	    					}
+		 	    	        	}
+		 	    	        	console.log("filterListDataArray");
+		 	    	        	console.log(filterListDataArray);
+		 	    	        	if(entryCheck)
+		 	    	        	filterListDataArray.sort(sortByProperty("jobid"));
+		 	    	        	for(var i=0; filterListDataArray.length>i;i++){
+	 	    	            		
+	 	    	            		var filterListData = filterListDataArray[i];
+	 	    	            		console.log("filterListData");
+	 	    	            		console.log(filterListData);
+	 	    	            		if(filterListData.scriptType=="PYTEST" || filterListData.scriptType=="PYWIN"){
+	 	    	            			$("#parallelExecution").prop( "disabled", true );
+	 	    	            			$("#browserType").prop( "disabled", true );
+	 	    	            		}
+	 	    	            			k++;
+	 	    	            			console.log("appName : "+filterListData.appName);
+	 	    	            			console.log("ID : "+filterListData.id);
+	 	    	            			console.log("fileName : "+filterListData.scriptFileName);
+	 	    	            			console.log("payload : "+filterListData.http_payload);
+	 	    	            			script = {}
+	 	    	            			script ["content"] = filterListData.http_payload;
+	 	    	            			selectedCheckboxScripts.push(script);
+	 	    	                  		var tr = $('<tr>'+
+	 	    	      			            '<td style="width:10px"><span>'+k+'</span> </td> '+
+	 	    	      			            '<td style="width:10px"><span>'+filterListData.appName+'</span> </td> '+
+	 	    	      			            '<td style="width:10px"><span>'+filterListData.scriptFileName+'</span> </td> '+
+	 	    	      		                '<td style="width:10px"><span> '+filterListData.createdBy+' </span></td>'+
+	 	    	                  			'</tr>');
+	 	    	                  		$('#scripttablebodyupdate').append(tr);
+
+	 	    	      				    console.log(scripts);
+		 	    	        	}
+		 	    	        	console.log("final scripts");
+		 	    	        	console.log(selectedCheckboxScripts);
+		 	    	        }else{
+		 	    	        	console.log("empty");
+		 	    	        	selectedCheckboxScripts = [];
+		 	    	        	$('#scripttablebodyupdate').empty();
+		 	    	        }
+		 	    	        
+		 	    	        //alert(JSON.stringify(data));
+		 	    	    }).jstree({ 'core' : {
+						    'data' : scriptArrayObj
+						 },"plugins": ["checkbox"] });
+				}); 
+ 	
+			
+ 		function checkAppName(selectedScripts,appname){
+ 			for(var key in  selectedScripts){
+ 				var scripts = selectedScripts[key];
+ 				if(scripts.appName == appname){
+ 					return true;
+ 				}else{
+ 					return false;
+ 				}
+ 			}
+ 		}
+	
+ 		function checkScriptName(selectedScripts,appname,scriptsname){
+ 			var returnFlag = 0;
+ 			for(var key in selectedScripts){
+ 				var selectedScript = selectedScripts[key];
+ 				if(selectedScript.appName == appname){
+ 					if(selectedScript.scriptFileName == scriptsname){
+ 						returnFlag = selectedScript.id;
+ 					}
+ 				}
+ 			}
+ 			 return returnFlag;
+ 		}
+ 		
+ 	    $('#suiteDetailsForm').submit(function(e) {
+            var Name = "Unknown OS";
+            if (navigator.userAgent.indexOf("Win") != -1) Name = 
+              "WindowsOS";
+            if (navigator.userAgent.indexOf("Mac") != -1) Name = 
+              "Macintosh";
+            if (navigator.userAgent.indexOf("Linux") != -1) Name = 
+              "LinuxOS";
+            if (navigator.userAgent.indexOf("Android") != -1) Name = 
+              "AndroidOS";
+            if (navigator.userAgent.indexOf("like Mac") != -1) Name = 
+              "iOS";
+
+            
+ 	        //Prevent default submission of form
+ 	        e.preventDefault();
+ 	        suite = {}
+ 	        suite ["exeType"] = $("input[name='executionType']:checked").val();
+ 	       	suite ["browserType"] = $("#browserType").val();
+ 	       	suite ["id"] = $("#suiteId").val();
+ 		       var pExexution = "off";
+ 		       if ($('#parallelExecution').is(":checked"))
+ 				{
+ 		    	   pExexution = "on";
+ 				}
+ 		       suite["pExexution"] = pExexution;
+ 		       suite["job"] = selectedCheckboxScripts;
+ 	        console.log(JSON.stringify(suite));
+ 	       /*<![CDATA[*/
+ 	       if($("#browserType").val()=="safari"){
+ 	    	   if(Name=="WindowsOS"){
+ 	    		  alert("Safari browser will not support with Windows OS");
+ 	    	   }else{
+ 	    		  $.post({
+ 	 	 	           url : context+'api/suite/updateSuite',
+ 	 	 	           data : JSON.stringify(suite),
+ 	 	 	           contentType:"application/json; charset=utf-8",
+ 	 	 	           dataType:"json",
+ 	 	 	           success : function(res) {
+ 	 	 	           	if(res.id!=null){
+ 	 	 	           		window.location = context+'ui/suites';
+ 	 	 	           	}else{
+ 	 	 	           		alert("something went wrong");	
+ 	 	 	           	}
+ 	 	 	           },
+ 	 	 	           error: function(XMLHttpRequest, textStatus, errorThrown) {
+ 	 	 	        	     alert("something went wrong");
+ 	 	 	        	  }
+ 	 	 	        })
+ 	    	   }
+ 	    	  
+ 	       }else{
+ 	    	  $.post({
+ 	 	           url : context+'api/suite/updateSuite',
+ 	 	           data : JSON.stringify(suite),
+ 	 	           contentType:"application/json; charset=utf-8",
+ 	 	           dataType:"json",
+ 	 	           success : function(res) {
+ 	 	           	if(res.id!=null){
+ 	 	           		window.location = context+'ui/suites';
+ 	 	           	}else{
+ 	 	           		alert("something went wrong");	
+ 	 	           	}
+ 	 	           },
+ 	 	           error: function(XMLHttpRequest, textStatus, errorThrown) {
+ 	 	        	     alert("something went wrong");
+ 	 	        	  }
+ 	 	        })
+ 	       }
+ 	       
+ 	      /*]]>*/
+ 	        //Remove all errors
+ 	        //$('input').next().remove();
+ 	        
+/*  	        $.post({
+ 	           url : context+'api/suite/updateSuite',
+ 	           data : JSON.stringify(suite),
+ 	           contentType:"application/json; charset=utf-8",
+ 	           dataType:"json",
+ 	           success : function(res) {
+ 	           	if(res.id!=null){
+ 	           		window.location = context+'ui/suites';
+ 	           	}else{
+ 	           		alert("something went wrong");	
+ 	           	}
+ 	           },
+ 	           error: function(XMLHttpRequest, textStatus, errorThrown) {
+ 	        	     alert("something went wrong");
+ 	        	  }
+ 	        }) */
+ 	     });
+ 	    
+ 	   $('#saveSuite').click(function(e) {
+ 	 	   
+	        //Prevent default submission of form
+	        e.preventDefault();
+	        suite = {}
+	        suite ["exeType"] = $("input[name='executionType']:checked").val();
+	       	suite ["browserType"] = $("#browserType").val();
+	       	suite ["id"] = $("#suiteId").val();
+		       var pExexution = "off";
+		       if ($('#parallelExecution').is(":checked"))
+				{
+		    	   pExexution = "on";
+				}
+		       suite["pExexution"] = pExexution;
+		       suite["job"] = selectedCheckboxScripts;
+	        console.log(JSON.stringify(suite));
+	        
+	        //Remove all errors
+	        //$('input').next().remove();
+	        
+	        $.post({
+	           url : context+'api/suite/addscripts',
+	           data : JSON.stringify(suite),
+	           contentType:"application/json; charset=utf-8",
+	           dataType:"json",
+	           success : function(res) {
+	        		alert("Updated Sucessfully!");	
+	           },
+	           error: function(XMLHttpRequest, textStatus, errorThrown) {
+	        	     alert("something went wrong");
+	        	  }
+	        })
+	     });
+ 	   function sortByProperty(property){  
+ 		   return function(a,b){  
+ 		      if(a[property] > b[property])  
+ 		         return 1;  
+ 		      else if(b[property] > a[property])  
+ 		         return -1;  
+ 		  
+ 		      return 0;  
+ 		   }  
+ 		}
+		</script>
+		
+       </th:block>
+      
+</body>
+
+</html>

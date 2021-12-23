@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.1.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<artifactId>agent</artifactId>
+	<name>agent</name>
+	<description>Cobot Agent for Remote Script Execution</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<poi.version>3.16</poi.version>
+		<java.version>1.8</java.version>
+		<amazonaws.version>1.11.32</amazonaws.version>
+		<selenium-version>3.141.59</selenium-version>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			
+		</dependency>
+
+<!-- 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security.oauth.boot</groupId>
+			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+			<version>2.0.0.RELEASE</version>
+		</dependency>
+ -->
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			
+		</dependency>
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.14.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>${selenium-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.4</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20190722</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.json</artifactId>
+			<version>1.1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>			
+		</dependency>
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+
+<!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna -->
+<dependency>
+    <groupId>net.java.dev.jna</groupId>
+    <artifactId>jna</artifactId>
+    <version>5.4.0</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform -->
+<dependency>
+    <groupId>net.java.dev.jna</groupId>
+    <artifactId>jna-platform</artifactId>
+    <version>5.4.0</version>
+</dependency>
+
+		
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-core</artifactId>
+			<version>${amazonaws.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>${amazonaws.version}</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>com.sikulix</groupId>
+			<artifactId>sikulixapi</artifactId>
+			<version>2.0.4</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.4.12</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>4.1</version>
+		</dependency>
+				<dependency>
+		    <groupId>ant-sahi</groupId>
+		    <artifactId>ant-sahi</artifactId>
+		    <version>1.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>sahi</groupId>
+		    <artifactId>sahi</artifactId>
+		    <version>1.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>sahiagent</groupId>
+		    <artifactId>sahiagent</artifactId>
+		    <version>1.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>manage-lib</groupId>
+		    <artifactId>manage-lib</artifactId>
+		    <version>1.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>desktop_postinstall</groupId>
+		    <artifactId>desktop_postinstall</artifactId>
+		    <version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.saviyant.cobot</groupId>
+			<artifactId>script-read</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jcl -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jcl</artifactId>
+    <version>5.2.9.RELEASE</version>
+</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>5.2.9.RELEASE</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-aop</artifactId>
+    <version>5.2.9.RELEASE</version>
+</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-beans</artifactId>
+    <version>5.2.9.RELEASE</version>
+</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-expression -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-expression</artifactId>
+    <version>5.2.9.RELEASE</version>
+</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-annotations</artifactId>
+    <version>2.12.3</version>
+</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>2.12.3</version>
+</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.12.3</version>
+</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <version>1.4.200</version>
+		    <scope>test</scope>
+		</dependency>
+	</dependencies>
+ 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>src/main/java/icon_menu64.png</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+</project>
+
+

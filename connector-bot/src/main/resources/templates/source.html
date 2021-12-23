@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<body>
+	<section layout:fragment="content">
+		<div class="content-wrapper">
+					<div class="page-header">
+				<h3 class="page-title">
+					<span class="page-title-icon bg-gradient-info text-white mr-2">
+						<i class="mdi mdi-home"></i>
+					</span> Source
+				</h3>
+
+			</div>
+			<span class="br"></span> <br />
+			
+			<div class="panel" style="padding: 10px; display: block;">
+				
+					<div class="row">
+						<div class="col-md-3">
+							<div class="treeview-animated files-list w-20 border"
+								style="height: 450px;overflow: auto;">
+								<ul class="intranet" id="expList"  style="margin-top: 4%;">
+									<li  class="intranet-folder">Script Files
+										<!-- <ul th:each="scriptFile : ${scriptFiles}">
+											<li class="intranet-folder"><span
+												th:text="${scriptFile.key}"></span>
+												<ul th:each="scriptFilesList : ${scriptFile.value}">
+													<li class="script-files-list"><span
+														th:text="${scriptFilesList.key}"></span>
+														<ul>
+															<li th:each="files : ${scriptFilesList.value}"
+																class="script-files-list" style="cursor: pointer;">
+																<span id="anchortag"
+																th:onclick="|findScript('${files}', '${scriptFile.key}','${scriptFilesList.key}')|">
+																	<i class="fa fa-file-text-o ic-w mr-1"></i> <span
+																	th:text="${files}"></span>
+															</span>
+															</li>
+														</ul></li>
+												</ul></li>
+										</ul> -->
+										<ul th:each="data : ${dataList}">
+										<li th:id="${data.key}" class="script-files-list"><span
+											th:text="${data.key}"></span>
+										<ul th:each="scriptFilesList : ${data.value}">
+										<li th:id="${scriptFilesList.key}" class="script-files-list"><span
+											th:text="${scriptFilesList.key}"></span>
+											<ul>
+												<li th:each="files : ${scriptFilesList.value}"
+													th:id="${files}"
+													class="script-files-list" style="cursor: pointer;"><span
+													id="anchortag"
+													th:onclick="|findScript('${files.scriptFileName}', '${files.scriptType}','${files.appName}')|">
+														<i class="fa fa-file-text-o ic-w mr-1"></i> <span
+														th:text="${files.scriptFileName}"></span>
+												</span></li>
+											</ul></li>
+									</ul>
+									</li>
+									</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+						
+						<div class="col-md-9">
+						
+						<div class="creat-new-script">
+							<a class="btn btn-gradient-primary ml-auto" data-toggle="modal"  data-target="#newScript" >Create New </a>
+						<!-- 	<a class="btn btn-danger ml-auto" href="#"> Edit </a> -->
+						</div>
+						
+						<!-- Modal -->
+						<div class="modal fade" id="newScript" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  <div class="modal-dialog modal-dialog-centered" role="document">
+						    <div class="modal-content">
+						    <form action="#" method="POST" id="createScriptForm">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="exampleModalLabel">Create New Script</h5>
+						        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						      </div>
+						      <div class="modal-body">
+						        
+						       
+						        <div class="form-group">
+			                      <!-- <label for="application">Application </label>
+			                      <select class="form-control form-control-lg" placeholder="Application" id="applicationName">
+			                        <option> Application </option>
+			                        <option> QA </option>
+			                        <option> Amazon </option>
+			                        <option> WebDesk </option>
+			                        <option> Test </option>
+			                      </select> -->
+			                      <label>Application Name</label>
+			                        <input type="text" class="form-control" id="appName" name="appName" placeholder="Application Name" />
+			                    </div>
+			                      
+			                     <div class="form-group">
+			                      <label for="ModuleName"> Type of test  </label>
+			                      <select class="form-control form-control-lg"  id="typeoftest" name="typeOfTest">
+			                        <option value="select"> select </option>
+			                         <option value="Web"> Web </option>
+			                        <option value="CLI"> CLI </option>
+			                       
+			                        <option value="Desktop"> Desktop </option>
+			                        <option value="API-Java"> API-Java </option>
+			                        <option value="PYTEST"> API- Python </option>
+			                      </select>
+			                    </div>  
+			                    <div class="form-group">
+			                        <label>Module</label>
+			                        <input type="text" class="form-control" id="moduleName" name="moduleName" placeholder="Module Name" />
+			                      </div>
+			                    <div class="form-group">
+			                        <label>ScriptName</label>
+			                        <input type="text" class="form-control" id="fileName" name="fileName" placeholder="File Name" />
+			                      </div>
+			                      
+			                    <div class="form-group">
+			                        <label for=" ApplicationDetails"> URL/Application Details</label>
+			                        <input type="text" class="form-control" id="url" name="url" placeholder="URL/Application Details" />
+			                      </div>
+			                  
+                    
+						      </div>
+						      <div class="modal-footer">
+						       <button type="button" class="btn btn-gradient-primary" id="createScriptBtn">Save </button>
+						        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+						       
+						      </div>
+						      </form>
+						    </div>
+						  </div>
+						</div>
+
+						<form action="#" id="scriptForm">
+							<div class="view-template">
+								<div id="editor" name="fileContent"
+									style="height: 500px; border: 1px solid #ddd; outline: none; overflow: auto;" spellcheck="false"
+									th:text="${fileContent}">
+								</div>
+								<div class="clearfix"></div>
+								<div class="commandline-display" style="margin-top: 10px;">
+									<textarea cols="60" rows="10" id="scriptCompileStatus"
+										style="height: 140px; border: 1px solid #ddd; outline: none; overflow: auto;width:895px !important;"
+										class="form-control" spellcheck="false">
+									</textarea>
+									<input type="hidden" id="currentFile" name="fileName" />
+									<input type="hidden" id="rootDir" name="rootDir" />
+								</div>
+							</div>
+							<div class="clearfix"></div>
+							<div class="action-btn" style="margin-top: 10px;">
+								<button type="button"
+									class="btn btn-primary btn-lg d-inline-block" id="compileBtn"
+									th:style="${fileContent == '' ? 'display:none' : 'display:block' }">Compile</button>
+								&nbsp;
+								<button type="button" class="btn btn-primary btn-lg "
+									id="saveBtn" style="display: none;">Save</button>
+							</div>
+							<span id="status"></span>
+							<input type="hidden" id="scriptType" name="scriptType" />
+							</form>
+						</div>
+						
+					</div>
+				
+			</div>
+		</div>
+	</section>
+</body>
+<style>
+.treeview-animated-list {
+	height: 450px;
+}
+
+.view-template {
+	height: 450px;
+	overflow-y: auto;
+}
+
+.fa-file-text-o:before {
+	margin-right: 3px;
+}
+
+.script-files-list a {
+	color: #424242
+}
+
+.script-files-list a.active {
+	color: #007bff
+}
+</style>
+
+<!--TODO: REPLACE CDN WITH SRC FILES-->
+
+<script>
+
+$(".script-files-list").click(function(){
+	  $(".script-files-list span").addClass("active");
+	});
+</script>
+</html>

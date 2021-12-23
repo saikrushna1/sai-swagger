@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<body>
+	<section layout:fragment="content">
+		<div class="content-wrapper">
+			<!-- 			<div class="row" id="proBanner">
+				<div class="col-12">
+					<span class="d-flex align-items-center purchase-popup pb-0">
+						<a href="#" target="_blank"
+						class="btn download-button purchase-button ml-auto">Add New
+							Project</a>
+					</span>
+				</div>
+			</div> -->
+
+			<div class="page-header">
+				<h3 class="page-title">
+					<span class="page-title-icon bg-gradient-info text-white mr-2">
+						<i class="mdi mdi-home"></i>
+					</span>Scripts
+				</h3>
+
+			</div>
+
+
+			<div class="row">
+				<div class="col-12 grid-margin">
+					<div class="card">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table id="recordedscripts" class="table table-striped table-bordered"
+									style="width: 100%">
+									<thead>
+										<tr>
+											<th>ID</th>
+												<th>Application Name</th>
+												<th>Script Name</th>
+												<th>Created By</th>
+												<th>Created On</th>
+												<th>Delete</th>
+											</tr>
+									</thead>
+									<tbody>
+										<tr th:each="script : ${scripts}">
+											<td><span th:text="${script.id}">id</span></td>
+											<td><span th:text="${script.appName}">appName</span></td>
+											<td><span th:text="${script.scriptFileName}">scriptFileName</span></td>
+											<td><span th:text="${script.createdBy}">createdBy</span></td>
+											<td><span th:text="${script.createdAt}">createdAt</span></td>
+											<td style="text-align: center;"><a th:href="@{/ui/delteScripts/__${script.id}__}"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

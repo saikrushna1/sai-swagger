@@ -1,0 +1,31 @@
+ALTER TABLE ssmcononections ADD connection_type varchar(255);
+
+
+ALTER TABLE `cobot`.`ssmcononections` 
+ADD COLUMN `remote_ip` VARCHAR(45) NULL AFTER `connection_type`,
+ADD COLUMN `paralle_excecution_status` VARCHAR(45) NULL AFTER `remote_ip`,
+CHANGE COLUMN `updated_at` `updated_at` DATETIME NOT NULL AFTER `paralle_excecution_status`;
+
+ALTER TABLE `cobot`.`jobs` 
+ADD COLUMN `paralle_excecution_status` VARCHAR(45) NULL AFTER `video_format`;
+
+
+ALTER TABLE `cobot`.`jobs` 
+ADD COLUMN `application_path` VARCHAR(45) NULL AFTER `paralle_excecution_status`;
+ALTER TABLE `cobot`.`ssmcononections` 
+ADD COLUMN `application_path` VARCHAR(45) NULL AFTER `paralle_excecution_status`;
+
+
+ALTER TABLE `cobot`.`ssmconnections` 
+ADD COLUMN `script_type` VARCHAR(45) NULL AFTER `video_format`;
+
+
+ALTER TABLE `cobot`.`bot_agent` 
+ADD COLUMN `number_of_instances` INT(11) NULL AFTER `load_balancer_flag`;
+
+ALTER TABLE `cobot`.`jobs` 
+ADD COLUMN `agent_ip` VARCHAR(45) NULL AFTER `application_path`;
+
+
+
+
